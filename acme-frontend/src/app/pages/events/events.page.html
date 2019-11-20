@@ -1,49 +1,42 @@
 <ion-header>
-    <ion-toolbar>
-        <ion-buttons slot="start">
-            <ion-menu-button></ion-menu-button>
-        </ion-buttons>
+    <ion-toolbar color="primary">
         <ion-title>
-            Events
+            {{ viewTitle }}
         </ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="today()">Today</ion-button>
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
-    <ion-header padding>{{viewTitle}}</ion-header>
+    <ion-button shape="round" padding [routerLink]="'create-event'" expand="full">Create Event</ion-button>
+
     <ion-row>
-        <ion-col col-9>
-            <ion-button [routerLink]="'create-event'" size="small">
-                Add event
-            </ion-button>
+        <!-- Change the displayed calendar mode -->
+        <ion-col size="4">
+            <ion-button expand="block" [color]="calendar.mode == 'month' ? 'primary' : 'secondary'" (click)="changeMode('month')">Month</ion-button>
         </ion-col>
-        <ion-col col-3>
-            <ion-select [(ngModel)]="calendar.mode">
-                <ion-select-option (ionSelect)="onOptionSelected($event)" *ngFor="let mode of calendarModes" [value]="mode.key">{{mode.value}}</ion-select-option>
-            </ion-select>
+        <ion-col size="4">
+            <ion-button expand="block" [color]="calendar.mode == 'week' ? 'primary' : 'secondary'" (click)="changeMode('week')">Week</ion-button>
         </ion-col>
+        <ion-col size="4">
+            <ion-button expand="block" [color]="calendar.mode == 'day' ? 'primary' : 'secondary'" (click)="changeMode('day')">Day</ion-button>
+        </ion-col>
+
     </ion-row>
+
     <calendar
-            [monthviewEventDetailTemplate]="template"
-            [eventSource]="events | async" [markDisabled]="markDisabled" [calendarMode]="calendar.mode"
+            [eventSource]="eventSource"
+            [calendarMode]="calendar.mode"
             [currentDate]="calendar.currentDate"
-            (onCurrentDateChanged)="onCurrentDateChanged($event)" (onEventSelected)="onEventSelected($event)"
             (onTitleChanged)="onViewTitleChanged($event)"
-            (onTimeSelected)="onTimeSelected($event)" step="30">
+            (onTimeSelected)="onTimeSelected($event)"
+            startHour="6"
+            endHour="20"
+            step="30"
+            startingDayWeek="1">
     </calendar>
 
 </ion-content>
-
-<ng-template #template let-showEventDetail="showEventDetail" let-selectedDate="selectedDate" let-noEventsLabel="noEventsLabel">
-    <ion-list class="event-detail-container" has-bouncing="false" overflow-scroll="false">
-        <ion-item *ngFor="let event of events | async" text-wrap>
-            <span>{{event.datetime | date: 'dd.MM HH:mm'}}</span>
-            <span class="event-detail"> : {{event.title}} </span>
-        </ion-item>
-        <ion-item *ngIf="(events | async)?.length == 0">
-            <div class="no-events-label">{{noEventsLabel}}</div>
-        </ion-item>
-    </ion-list>
-</ng-template>
-

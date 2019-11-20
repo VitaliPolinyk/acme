@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AddEvent } from '../../../actions/event.action';
 import { Store } from '@ngxs/store';
 import { EventsService } from '../../../shared/services/events/events.service';
+import { ToastsService } from '../../../shared/services/toasts/toasts.service';
 
 @Component({
     selector: 'app-create-event',
@@ -15,7 +16,7 @@ export class CreateEventPage implements OnInit {
     eventForm: FormGroup;
     submitted = false;
 
-    constructor(private store: Store, private formBuilder: FormBuilder, private router: Router, private eventService: EventsService) {
+    constructor(private store: Store, private formBuilder: FormBuilder, private router: Router, private eventService: EventsService, private toastService: ToastsService) {
         this.eventForm = this.formBuilder.group({
             title: ['', [Validators.required]],
             datetime: ['', [Validators.required]]
@@ -40,6 +41,7 @@ export class CreateEventPage implements OnInit {
         this.eventService.createEvent(this.eventForm.value).subscribe((data) => {
             this.store.dispatch(new AddEvent(data));
             this.router.navigate(['events']);
+            this.toastService.presentToast('You successful sign in');
         });
     }
 

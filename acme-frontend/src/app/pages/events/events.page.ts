@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import { EventState } from '../../state/event.state';
@@ -14,63 +14,82 @@ import { SetEvents } from '../../actions/event.action';
 export class EventsPage implements OnInit {
 
     @Select(EventState.getEvents) events: Observable<Event[]>;
-    selectedDay = new Date();
-    selectedObject;
-    viewTitle;
-    isToday: boolean;
-    calendarModes = [
-        {key: 'month', value: 'Month'},
-        {key: 'week', value: 'Week'},
-        {key: 'day', value: 'Day'},
-    ];
-    calendar = {
-        mode: this.calendarModes[0].key,
-        currentDate: new Date()
+
+    event = {
+        title: '',
+        desc: '',
+        startTime: '',
+        endTime: '',
+        allDay: false
     };
 
-    constructor(private eventService: EventsService, private store: Store) {}
+    minDate = new Date().toISOString();
+
+    eventSource = [];
+    viewTitle;
+
+    calendar = {
+        mode: 'month',
+        currentDate: new Date(),
+    };
+
+    constructor(private eventService: EventsService, private store: Store) {
+    }
 
     ngOnInit() {
+        this.resetEvent();
         this.getAllEvents();
+    }
+
+    getAllEvents() {
+        this.eventService.getAllEvents().subscribe((data) => {
+            if (data) {
+                this.eventSource = data;
+                console.log(this.eventSource);
+                this.store.dispatch(new SetEvents(data));
+            }
+        });
+    }
+
+    resetEvent() {
+        this.event = {
+            title: '',
+            desc: '',
+            startTime: new Date().toISOString(),
+            endTime: new Date().toISOString(),
+            allDay: false
+        };
+    }
+
+    changeMode(mode) {
+        this.calendar.mode = mode;
+    }
+
+// Focus today
+    today() {
+        this.calendar.currentDate = new Date();
     }
 
     onViewTitleChanged(title) {
         this.viewTitle = title;
     }
 
-    onEventSelected(event) {
-        console.log('Event selected:' + event.startTime + '-' + event.endTime + ',' + event.title);
-    }
 
+// Time slot was clicked
     onTimeSelected(ev) {
-        this.selectedObject = ev;
+        const selected = new Date(ev.selectedTime);
+        this.event.startTime = selected.toISOString();
+        selected.setHours(selected.getHours() + 1);
+        this.event.endTime = (selected.toISOString());
     }
 
-    onCurrentDateChanged(event: Date) {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        event.setHours(0, 0, 0, 0);
-        this.isToday = today.getTime() === event.getTime();
-
-        this.selectedDay = event;
-
-    }
-
-    getAllEvents() {
-        this.eventService.getAllEvents().subscribe((data) => {
-            if (data) {
-                this.store.dispatch(new SetEvents(data));
-            }
-        });
-    }
-
-    markDisabled(date: Date) {
-        const current = new Date();
-        current.setHours(0, 0, 0);
-        return (date < current);
-    }
-
-    onOptionSelected($event: any) {
-        this.calendar.mode = $event;
-    }
+    // next() {
+    //     const swiper = document.querySelector('.swiper-container').swiper;
+    //     swiper.slideNext();
+    // }
+    //
+    // back() {
+    //     const swiper = document.querySelector('.swiper-container').swiper;
+    //     swiper.slidePrev();
+    // }
 }

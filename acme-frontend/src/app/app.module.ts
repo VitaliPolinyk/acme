@@ -17,7 +17,8 @@ import { AuthService } from './shared/services/auth/auth.service';
 import { ApiService } from './shared/services/api/api';
 import { ShareService } from './shared/services/share/share.service';
 import { ToastsService } from './shared/services/toasts/toasts.service';
-import { EventsService } from "./shared/services/events/events.service";
+import { EventsService } from './shared/services/events/events.service';
+import { NgCalendarModule } from "ionic2-calendar";
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,6 +28,7 @@ import { EventsService } from "./shared/services/events/events.service";
     HttpClientModule,
     IonicModule.forRoot(),
     AppRoutingModule,
+    NgCalendarModule,
     NgxsModule.forRoot([
       EventState
     ])
