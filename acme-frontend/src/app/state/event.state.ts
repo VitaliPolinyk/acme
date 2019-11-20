@@ -1,5 +1,5 @@
 import { State, Action, StateContext, Selector } from '@ngxs/store';
-import { AddEvent } from '../actions/event.action';
+import { AddEvent, SetEvents } from '../actions/event.action';
 import { Event } from '../models/Event';
 
 export class EventStateModel {
@@ -25,6 +25,15 @@ export class EventState {
         const state = getState();
         patchState({
             events: [...state.events, payload]
+        });
+    }
+
+    @Action(SetEvents)
+    setEvents({getState, setState}: StateContext<EventStateModel>, {payload}: SetEvents) {
+        const state = getState();
+        setState({
+            ...state,
+            events: payload
         });
     }
 }

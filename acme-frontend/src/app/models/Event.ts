@@ -7,4 +7,6 @@ export interface Event {
     updatedAt?: string;
     startTime?: string;
     endTime?: string;
+    desc?: '';
+    allDay?: false;
 }

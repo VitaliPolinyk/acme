@@ -10,16 +10,19 @@ export class EventsService {
 
     getAllEvents() {
         return this.api.get('event').pipe(map(events => {
-            return this.filterEvents(events);
+           return  events.map((event) => {
+               return  this.filterEvents(event);
+            });
         }));
     }
 
     createEvent(params) {
-        return this.api.post('event', params);
+        return this.api.post('event', params).pipe((map((event) => {
+           return this.filterEvents(event);
+        })));
     }
 
-    filterEvents(events) {
-        return events.map((event: any) => {
+    filterEvents(event) {
             return {
                 title: event.title,
                 desc: '',
@@ -27,7 +30,6 @@ export class EventsService {
                 endTime: new Date(event.datetime),
                 allDay: false
             };
-        });
     }
 
 }

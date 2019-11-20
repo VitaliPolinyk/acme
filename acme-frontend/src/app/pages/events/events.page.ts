@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { EventState } from '../../state/event.state';
 import { Event } from '../../models/Event';
 import { EventsService } from '../../shared/services/events/events.service';
 import { SetEvents } from '../../actions/event.action';
@@ -11,9 +10,11 @@ import { SetEvents } from '../../actions/event.action';
     templateUrl: 'events.page.html',
     styleUrls: ['events.page.scss']
 })
-export class EventsPage implements OnInit {
+export class EventsPage implements OnInit, OnDestroy {
 
-    @Select(EventState.getEvents) events: Observable<Event[]>;
+    subscription: Subscription;
+
+    events: Observable<Event[]>;
 
     event = {
         title: '',
@@ -34,20 +35,22 @@ export class EventsPage implements OnInit {
     };
 
     constructor(private eventService: EventsService, private store: Store) {
+        this.events = this.store.select(state => state.events.events);
     }
 
     ngOnInit() {
         this.resetEvent();
         this.getAllEvents();
+        this.subscription = this.events.subscribe((data) => {
+            if (data) {
+                this.eventSource = data;
+            }
+        });
     }
 
     getAllEvents() {
         this.eventService.getAllEvents().subscribe((data) => {
-            if (data) {
-                this.eventSource = data;
-                console.log(this.eventSource);
-                this.store.dispatch(new SetEvents(data));
-            }
+            this.store.dispatch(new SetEvents(data));
         });
     }
 
@@ -83,13 +86,7 @@ export class EventsPage implements OnInit {
         this.event.endTime = (selected.toISOString());
     }
 
-    // next() {
-    //     const swiper = document.querySelector('.swiper-container').swiper;
-    //     swiper.slideNext();
-    // }
-    //
-    // back() {
-    //     const swiper = document.querySelector('.swiper-container').swiper;
-    //     swiper.slidePrev();
-    // }
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
+    }
 }

@@ -9,5 +9,5 @@ export class SetEvents {
 export class AddEvent {
     static readonly type = '[Project] AddEvent';
 
-    constructor(public payload: Event) {}
+    constructor(public payload: any) {}
 }
