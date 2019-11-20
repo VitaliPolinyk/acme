@@ -1,0 +1,34 @@
+{
+    "linterOptions": {
+        "exclude": [
+            "./src/infra/http/Http.test.ts",
+            "./src/infra/database/SeedDatabase.ts"
+        ]
+    },
+    "extends": [
+        "tslint-consistent-codestyle",
+        "tslint-sonarts"
+    ],
+    "rules": {
+        "promise-function-async": true,
+        "no-commented-code": false,
+        "no-duplicate-string": false,
+        "prefer-immediate-return": false,
+        "object-literal-sort-keys": false,
+        "max-union-size": false,
+        "no-identical-functions": false,
+        "no-inverted-boolean-check": {
+            "severity": "warning"
+        },
+        "cognitive-complexity": {
+            "severity": "warning"
+        },
+        "no-big-function": {
+            "severity": "warning"
+        },
+        "quotemark": [
+            true,
+            "single"
+        ]
+    }
+}

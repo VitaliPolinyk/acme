@@ -1,0 +1,49 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>
+            Events
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <ion-header padding>{{viewTitle}}</ion-header>
+    <ion-row>
+        <ion-col col-9>
+            <ion-button [routerLink]="'create-event'" size="small">
+                Add event
+            </ion-button>
+        </ion-col>
+        <ion-col col-3>
+            <ion-select [(ngModel)]="calendar.mode">
+                <ion-select-option (ionSelect)="onOptionSelected($event)" *ngFor="let mode of calendarModes" [value]="mode.key">{{mode.value}}</ion-select-option>
+            </ion-select>
+        </ion-col>
+    </ion-row>
+    <calendar
+            [monthviewEventDetailTemplate]="template"
+            [eventSource]="events | async" [markDisabled]="markDisabled" [calendarMode]="calendar.mode"
+            [currentDate]="calendar.currentDate"
+            (onCurrentDateChanged)="onCurrentDateChanged($event)" (onEventSelected)="onEventSelected($event)"
+            (onTitleChanged)="onViewTitleChanged($event)"
+            (onTimeSelected)="onTimeSelected($event)" step="30">
+    </calendar>
+
+</ion-content>
+
+<ng-template #template let-showEventDetail="showEventDetail" let-selectedDate="selectedDate" let-noEventsLabel="noEventsLabel">
+    <ion-list class="event-detail-container" has-bouncing="false" overflow-scroll="false">
+        <ion-item *ngFor="let event of events | async" text-wrap>
+            <span>{{event.datetime | date: 'dd.MM HH:mm'}}</span>
+            <span class="event-detail"> : {{event.title}} </span>
+        </ion-item>
+        <ion-item *ngIf="(events | async)?.length == 0">
+            <div class="no-events-label">{{noEventsLabel}}</div>
+        </ion-item>
+    </ion-list>
+</ng-template>
+

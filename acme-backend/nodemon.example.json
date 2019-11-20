@@ -1,0 +1,16 @@
+{
+    "ignore": [
+        ".git",
+        "node_modules",
+        "build/*"
+    ],
+    "verbose": false,
+    "env": {
+        "APP_NAME": "ACME",
+        "LOG_LEVEL": "verbose",
+        "NODE_ENV": "production",
+        "PORT": "5000",
+        "AUTH_SECRET": "CHANGE-ME",
+        "AUTH_EXPIRES_IN": "1d"
+    }
+}

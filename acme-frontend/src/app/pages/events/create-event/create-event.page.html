@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Create Event
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form  [formGroup]="eventForm" autocomplete="off" (ngSubmit)="handleSubmit()">
+
+    <ion-item>
+      <ion-label>Title</ion-label>
+      <ion-input formControlName="title"> </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Start Time</ion-label>
+      <ion-datetime
+              formControlName="datetime"
+              display-format="D, MMMM YYYY"
+              picker-format="DD MM YYYY"
+      ></ion-datetime>
+    </ion-item>
+
+
+    <div padding>
+      <ion-button size="large" type="submit" expand="block">Create</ion-button>
+    </div>
+
+  </form>
+
+</ion-content>
