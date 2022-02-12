@@ -22,7 +22,7 @@
   "author": "Vitaliy Polinyk<vitaliy21039.96@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "ajv": "^6.10.2",
+    "ajv": "^6.12.3",
     "auto-bind": "^2.1.1",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.7.1",
